@@ -1,7 +1,10 @@
-import { cn } from '@/lib/utils'
-import { Providers } from '@/providers/providers'
 import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
+
+import { Toaster } from '@/components/ui/sonner'
+import { cn } from '@/lib/utils'
+import { Providers } from '@/providers/providers'
+
 import './globals.css'
 
 const geistSans = localFont({
@@ -47,6 +50,7 @@ export default function RootLayout({
 							{children}
 						</div>
 					</div>
+					<Toaster richColors />
 				</Providers>
 			</body>
 		</html>
