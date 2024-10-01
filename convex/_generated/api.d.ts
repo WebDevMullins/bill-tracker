@@ -11,10 +11,11 @@
  */
 
 import type {
-	ApiFromModules,
-	FilterApi,
-	FunctionReference
-} from 'convex/server'
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
+import type * as bill from "../bill.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -24,14 +25,16 @@ import type {
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-declare const fullApi: ApiFromModules<{}>
+declare const fullApi: ApiFromModules<{
+  bill: typeof bill;
+}>;
 export declare const api: FilterApi<
-	typeof fullApi,
-	FunctionReference<any, 'public'>
->
+  typeof fullApi,
+  FunctionReference<any, "public">
+>;
 export declare const internal: FilterApi<
-	typeof fullApi,
-	FunctionReference<any, 'internal'>
->
+  typeof fullApi,
+  FunctionReference<any, "internal">
+>;
 
 /* prettier-ignore-end */

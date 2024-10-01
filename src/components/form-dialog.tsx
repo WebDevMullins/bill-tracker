@@ -1,10 +1,12 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from 'convex/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { api } from '../../convex/_generated/api'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -20,7 +22,7 @@ import { Input } from '@/components/ui/input'
 import {
 	Form,
 	FormControl,
-	FormDescription,
+	// FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -29,25 +31,33 @@ import {
 
 const formSchema = z.object({
 	name: z.string().min(1),
-	amount: z.number().positive().min(1)
+	amount: z.string().min(1)
 })
 
 export function FormDialog() {
 	const [open, setOpen] = useState(false)
+	const createBill = useMutation(api.bill.createBill)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: '',
-			amount: 1
+			amount: ''
 		}
 	})
 
-	function onSubmit(data: z.infer<typeof formSchema>) {
-		console.log(data)
-		toast.success('Bill added successfully.')
-		form.reset()
-		setOpen(false)
+	async function onSubmit(data: z.infer<typeof formSchema>) {
+		try {
+			await createBill({ name: data.name, amount: data.amount })
+			console.log(data)
+			toast.success(`${data.name} - $${data.amount} added successfully.`)
+			form.reset()
+			setOpen(false)
+		} catch (error) {
+			console.error(error)
+			toast.error('Failed to add bill.')
+			setOpen(false)
+		}
 	}
 
 	return (
@@ -66,7 +76,7 @@ export function FormDialog() {
 			<DialogContent className='sm:max-w-[425px]'>
 				<DialogHeader>
 					<DialogTitle>Add Bill</DialogTitle>
-					<DialogDescription>Enter the details of the bill.</DialogDescription>
+					<DialogDescription>Enter the details of the bill</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
@@ -80,13 +90,13 @@ export function FormDialog() {
 											<FormLabel>Name</FormLabel>
 											<FormControl>
 												<Input
-													placeholder='Costco'
+													placeholder='Netflix'
 													{...field}
 												/>
 											</FormControl>
-											<FormDescription>
+											{/* <FormDescription>
 												Enter the name of the bill.
-											</FormDescription>
+											</FormDescription> */}
 											<FormMessage />
 										</FormItem>
 									)}></FormField>
@@ -98,11 +108,11 @@ export function FormDialog() {
 											<FormLabel>Amount</FormLabel>
 											<FormControl>
 												<Input
-													// placeholder='100'
+													placeholder='$100.00'
 													{...field}
 												/>
 											</FormControl>
-											<FormDescription>Enter bill amount.</FormDescription>
+											{/* <FormDescription>Enter bill amount.</FormDescription> */}
 											<FormMessage />
 										</FormItem>
 									)}></FormField>
