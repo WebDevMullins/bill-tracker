@@ -3,11 +3,16 @@ import { mutation, query } from './_generated/server'
 
 // Create a new bill
 export const createBill = mutation({
-	args: { name: v.string(), amount: v.number() },
+	args: {
+		amount: v.number(),
+		dueDate: v.string(),
+		name: v.string()
+	},
 	handler: async (ctx, args) => {
 		const newBill = await ctx.db.insert('bills', {
-			name: args.name,
-			amount: args.amount
+			amount: args.amount,
+			dueDate: args.dueDate,
+			name: args.name
 		})
 		return newBill
 	}

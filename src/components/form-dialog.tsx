@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { convertToMiliunits } from '@/lib/utils'
+import { DatePicker } from './date-picker'
 import {
 	Form,
 	FormControl,
@@ -31,30 +32,39 @@ import {
 } from './ui/form'
 
 const formSchema = z.object({
-	name: z.string().min(1),
-	amount: z.string().min(1)
+	amount: z.string().min(1),
+	dueDate: z.coerce.date(),
+	// dueDate: z.string().min(1),
+	name: z.string().min(1)
 })
 
 type FormValues = z.infer<typeof formSchema>
 
-export function FormDialog() {
+type Props = {
+	defaultValues?: FormValues
+}
+
+export function FormDialog({ defaultValues }: Props) {
 	const [open, setOpen] = useState(false)
 	const createBill = useMutation(api.bill.createBill)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			name: '',
-			amount: ''
-		}
+		defaultValues: defaultValues
 	})
 
 	async function onSubmit(value: FormValues) {
 		const amount = parseFloat(value.amount)
 		const amountInMiliunits = convertToMiliunits(amount)
 
+		const formattedDate = value.dueDate.toISOString().split('T')[0]
+
 		try {
-			await createBill({ name: value.name, amount: amountInMiliunits })
+			await createBill({
+				amount: amountInMiliunits,
+				dueDate: formattedDate,
+				name: value.name
+			})
 			toast.success(`${value.name} - $${value.amount} added successfully.`)
 			form.reset()
 			setOpen(false)
@@ -89,6 +99,21 @@ export function FormDialog() {
 					<form onSubmit={form.handleSubmit(onSubmit)}>
 						<div className='grid gap-4 py-4'>
 							<div className='grid grid-cols-4 items-center gap-4'>
+								<FormField
+									control={form.control}
+									name='dueDate'
+									render={({ field }) => (
+										<FormItem className='flex flex-col'>
+											<FormLabel>Due Date</FormLabel>
+											<DatePicker
+												value={field.value}
+												onChange={field.onChange}
+												// disabled={isPending}
+											/>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								<FormField
 									control={form.control}
 									name='name'
