@@ -1,9 +1,12 @@
 'use client'
 
-import { FormDialog } from '@/components/form-dialog'
-import { Button } from '@/components/ui/button'
 import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
+
+import { FormDialog } from '@/components/form-dialog'
+
+import { Button } from '@/components/ui/button'
+import { formatCurrency } from '@/lib/utils'
 
 export default function Home() {
 	const bills = useQuery(api.bill.getBills)
@@ -17,7 +20,7 @@ export default function Home() {
 					className='mt-4 flex items-center justify-between'>
 					<div>
 						<h2 className='text-xl'>{bill.name}</h2>
-						<p className='text-gray-500'>${bill.amount}</p>
+						<p className='text-gray-500'>{formatCurrency(bill.amount)}</p>
 					</div>
 					<Button variant='outline'>Edit</Button>
 				</div>

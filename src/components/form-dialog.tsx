@@ -19,6 +19,7 @@ import {
 	DialogTrigger
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { convertToMiliunits } from '@/lib/utils'
 import {
 	Form,
 	FormControl,
@@ -34,6 +35,8 @@ const formSchema = z.object({
 	amount: z.string().min(1)
 })
 
+type FormValues = z.infer<typeof formSchema>
+
 export function FormDialog() {
 	const [open, setOpen] = useState(false)
 	const createBill = useMutation(api.bill.createBill)
@@ -46,16 +49,20 @@ export function FormDialog() {
 		}
 	})
 
-	async function onSubmit(data: z.infer<typeof formSchema>) {
+	async function onSubmit(value: FormValues) {
+		const amount = parseFloat(value.amount)
+		const amountInMiliunits = convertToMiliunits(amount)
+
 		try {
-			await createBill({ name: data.name, amount: data.amount })
-			console.log(data)
-			toast.success(`${data.name} - $${data.amount} added successfully.`)
+			await createBill({ name: value.name, amount: amountInMiliunits })
+			toast.success(`${value.name} - $${value.amount} added successfully.`)
 			form.reset()
 			setOpen(false)
 		} catch (error) {
 			console.error(error)
-			toast.error('Failed to add bill.')
+			const errorMessage =
+				error instanceof Error ? error.message : 'Unknown error'
+			toast.error(`Failed to add bill. ${errorMessage}`)
 			setOpen(false)
 		}
 	}
