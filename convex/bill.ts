@@ -24,3 +24,13 @@ export const getBills = query({
 		return bills
 	}
 })
+
+// Delete a bill
+export const deleteBill = mutation({
+	args: {
+		id: v.id('bills')
+	},
+	handler: async (ctx, args) => {
+		return await ctx.db.delete(args.id)
+	}
+})

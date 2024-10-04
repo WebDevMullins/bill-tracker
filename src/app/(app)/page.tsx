@@ -1,15 +1,28 @@
 'use client'
 
-import { useQuery } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
+import { toast } from 'sonner'
 import { api } from '../../../convex/_generated/api'
+import { Id } from '../../../convex/_generated/dataModel'
 
 import { FormDialog } from '@/components/form-dialog'
-
 import { Button } from '@/components/ui/button'
+
 import { formatCurrency, formatDate } from '@/lib/utils'
 
 export default function Home() {
 	const bills = useQuery(api.bill.getBills)
+	const deleteBill = useMutation(api.bill.deleteBill)
+
+	const handleDelete = async (id: Id<'bills'>) => {
+		try {
+			await deleteBill({ id })
+			toast.success('Bill deleted')
+		} catch (error) {
+			console.error(error)
+			toast.error('Error deleting bill')
+		}
+	}
 
 	return (
 		<div className='container py-12'>
@@ -26,7 +39,11 @@ export default function Home() {
 							Due Date: {formatDate(bill.dueDate)}
 						</p>
 					</div>
-					<Button variant='outline'>Edit</Button>
+					<Button
+						variant='outline'
+						onClick={() => handleDelete(bill._id)}>
+						Delete
+					</Button>
 				</div>
 			))}
 		</div>
