@@ -8,5 +8,5 @@ export default defineSchema({
 		amount: v.float64(),
 		dueDate: v.string(),
 		name: v.string()
-	})
+	}).index('by_dueDate', ['dueDate'])
 })

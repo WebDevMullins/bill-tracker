@@ -18,9 +18,14 @@ export const createBill = mutation({
 	}
 })
 
+// Get all bills
 export const getBills = query({
 	handler: async (ctx) => {
-		const bills = await ctx.db.query('bills').collect()
+		const bills = await ctx.db
+			.query('bills')
+			.withIndex('by_dueDate')
+			.order('asc')
+			.collect()
 		return bills
 	}
 })
