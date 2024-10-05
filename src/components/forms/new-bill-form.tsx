@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from 'convex/react'
+import { formatDate } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -48,7 +49,8 @@ export function NewBillForm({ defaultValues }: Props) {
 		const amount = parseFloat(value.amount)
 		const amountInMiliunits = convertToMiliunits(amount)
 
-		const formattedDate = value.dueDate.toISOString().split('T')[0]
+		// const formattedDate = value.dueDate.toISOString().split('T')[0]
+		const formattedDate = formatDate(value.dueDate, 'MM/dd/yyyy')
 
 		try {
 			await createBill({
@@ -56,6 +58,7 @@ export function NewBillForm({ defaultValues }: Props) {
 				dueDate: formattedDate,
 				name: value.name
 			})
+			console.log(value)
 			toast.success(`${value.name} - $${value.amount} added successfully.`)
 		} catch (error) {
 			console.error(error)

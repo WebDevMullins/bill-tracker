@@ -22,7 +22,3 @@ export function formatCurrency(amount: number) {
 		minimumFractionDigits: 2
 	}).format(finalAmount)
 }
-
-export function formatDate(date: string) {
-	return new Date(date).toLocaleDateString()
-}

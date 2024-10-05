@@ -8,7 +8,7 @@ import { Id } from '../../../convex/_generated/dataModel'
 import CreateButton from '@/components/create-button'
 import { Button } from '@/components/ui/button'
 
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency } from '@/lib/utils'
 
 export default function Home() {
 	const bills = useQuery(api.bill.getBills)
@@ -35,9 +35,7 @@ export default function Home() {
 					<div>
 						<h2 className='text-xl'>{bill.name}</h2>
 						<p className='text-gray-500'>{formatCurrency(bill.amount)}</p>
-						<p className='text-gray-500'>
-							Due Date: {formatDate(bill.dueDate)}
-						</p>
+						<p className='text-gray-500'>Due Date: {bill.dueDate}</p>
 					</div>
 					<Button
 						variant='outline'
