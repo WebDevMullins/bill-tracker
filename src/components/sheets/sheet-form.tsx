@@ -9,12 +9,12 @@ import {
 import { useSheet } from '@/hooks/use-sheet'
 
 type SheetProps = {
+	description: string
 	form: React.ReactNode
 	title: string
-	description: string
 }
 
-export function SheetForm({ form, title, description }: SheetProps) {
+export function SheetForm({ description, form, title }: SheetProps) {
 	const { isOpen, onClose } = useSheet()
 
 	return (

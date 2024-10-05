@@ -5,11 +5,10 @@ import { toast } from 'sonner'
 import { api } from '../../../convex/_generated/api'
 import { Id } from '../../../convex/_generated/dataModel'
 
-import { FormDialog } from '@/components/form-dialog'
+import CreateButton from '@/components/create-button'
 import { Button } from '@/components/ui/button'
 
 import { formatCurrency, formatDate } from '@/lib/utils'
-import CreateButton from '@/components/create-button'
 
 export default function Home() {
 	const bills = useQuery(api.bill.getBills)
@@ -26,10 +25,9 @@ export default function Home() {
 	}
 
 	return (
-		<div className='container py-12 space-y-4'>
+		<div className='container space-y-4 py-12'>
 			<h1 className='text-4xl'>Bill Tracker</h1>
 			<CreateButton />
-			<FormDialog />
 			{bills?.map((bill) => (
 				<div
 					key={bill._id}

@@ -4,7 +4,6 @@ import { PlusCircleIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-// import { useNewBill } from './hooks/use-new-bill'
 import { useSheet } from '@/hooks/use-sheet'
 
 export default function CreateButton() {

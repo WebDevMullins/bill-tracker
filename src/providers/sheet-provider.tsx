@@ -2,7 +2,7 @@
 
 import { useMountedState } from 'react-use'
 
-import { SheetForm } from '@/components/sheet-form'
+import { NewBillSheet } from '@/components/sheets/new-bill-sheet'
 
 export default function SheetProvider() {
 	const isMounted = useMountedState()
@@ -13,7 +13,7 @@ export default function SheetProvider() {
 
 	return (
 		<>
-			<SheetForm  />
+			<NewBillSheet />
 		</>
 	)
 }
