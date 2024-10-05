@@ -8,7 +8,9 @@ import { Id } from '../../../convex/_generated/dataModel'
 import CreateButton from '@/components/create-button'
 import { Button } from '@/components/ui/button'
 
+import { DataTable } from '@/components/data-table/data-table'
 import { formatCurrency } from '@/lib/utils'
+import { columns } from '@/components/bills/columns'
 
 export default function Home() {
 	const bills = useQuery(api.bill.getBills)
@@ -44,6 +46,12 @@ export default function Home() {
 					</Button>
 				</div>
 			))}
+			<DataTable
+				columns={columns}
+				data={bills || []}
+				filterKey='name'
+				// options={['status', 'priority']}
+			/>
 		</div>
 	)
 }
