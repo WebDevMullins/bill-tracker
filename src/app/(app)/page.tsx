@@ -9,6 +9,7 @@ import { FormDialog } from '@/components/form-dialog'
 import { Button } from '@/components/ui/button'
 
 import { formatCurrency, formatDate } from '@/lib/utils'
+import CreateButton from '@/components/create-button'
 
 export default function Home() {
 	const bills = useQuery(api.bill.getBills)
@@ -25,8 +26,9 @@ export default function Home() {
 	}
 
 	return (
-		<div className='container py-12'>
+		<div className='container py-12 space-y-4'>
 			<h1 className='text-4xl'>Bill Tracker</h1>
+			<CreateButton />
 			<FormDialog />
 			{bills?.map((bill) => (
 				<div
