@@ -88,27 +88,27 @@ export const columns: ColumnDef<Bill>[] = [
 	// 		<div className='capitalize'>{row.getValue('account')}</div>
 	// 	)
 	// },
-	{
-		accessorKey: 'isRecurring',
-		header: ({ column }) => (
-			<DataTableColumnHeader
-				column={column}
-				title='Recurring'
-			/>
-		),
-		cell: ({ row }) => {
-			const value = row.getValue('isRecurring')
-			return (
-				<div className='ml-6'>
-					{value ? (
-						<CheckIcon className='size-4 text-emerald-500' />
-					) : (
-						<XIcon className='size-4 text-red-500' />
-					)}
-				</div>
-			)
-		}
-	},
+	// {
+	// 	accessorKey: 'isRecurring',
+	// 	header: ({ column }) => (
+	// 		<DataTableColumnHeader
+	// 			column={column}
+	// 			title='Recurring'
+	// 		/>
+	// 	),
+	// 	cell: ({ row }) => {
+	// 		const value = row.getValue('isRecurring')
+	// 		return (
+	// 			<div className='ml-6'>
+	// 				{value ? (
+	// 					<CheckIcon className='size-4 text-emerald-500' />
+	// 				) : (
+	// 					<XIcon className='size-4 text-red-500' />
+	// 				)}
+	// 			</div>
+	// 		)
+	// 	}
+	// },
 	{
 		accessorKey: 'isPaid',
 		header: ({ column }) => (
