@@ -17,6 +17,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { UnpayBill } from './unpay-bill'
 
 interface DataTableRowActionsProps<TData> {
 	row: Row<TData>
@@ -49,7 +50,11 @@ export function TableRowActions<TData>({
 				<DropdownMenuLabel>{bill.name}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>View bill details</DropdownMenuItem>
-				<PayBill billId={bill._id as Id<'bills'>} />
+				{bill.isPaid ? (
+					<UnpayBill billId={bill._id as Id<'bills'>} />
+				) : (
+					<PayBill billId={bill._id as Id<'bills'>} />
+				)}
 				<DropdownMenuSeparator />
 				<DeleteBill
 					billId={bill._id as Id<'bills'>}

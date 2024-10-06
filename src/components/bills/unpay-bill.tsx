@@ -1,5 +1,5 @@
 import { useMutation } from 'convex/react'
-import { DollarSignIcon } from 'lucide-react'
+import { CircleMinusIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { api } from '@/../convex/_generated/api'
@@ -11,27 +11,27 @@ type PayBillProps = {
 	billId: Id<'bills'>
 }
 
-export function PayBill({ billId }: PayBillProps) {
-	const paybill = useMutation(api.bills.payBill)
+export function UnpayBill({ billId }: PayBillProps) {
+	const unpayBill = useMutation(api.bills.unpayBill)
 
-	const handlePay = async (id: Id<'bills'>) => {
+	const handleUnpay = async (id: Id<'bills'>) => {
 		try {
-			await paybill({ id })
-			toast.success('Bill paid')
+			await unpayBill({ id })
+			toast.success('Bill unpaid')
 		} catch (error) {
 			console.error(error)
-			toast.error('Error paying bill')
+			toast.error('Error unpaying bill')
 		}
 	}
 
 	return (
 		<DropdownMenuItem
 			onSelect={() => {
-				handlePay(billId)
+				handleUnpay(billId)
 			}}
-			className='text-emerald-500'>
-			<DollarSignIcon className='mr-2 size-4' />
-			<span>Pay bill</span>
+			className='text-muted-foreground'>
+			<CircleMinusIcon className='mr-2 size-4' />
+			<span>Unpay bill</span>
 		</DropdownMenuItem>
 	)
 }
