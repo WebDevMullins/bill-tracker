@@ -23,10 +23,12 @@ import { Input } from '@/components/ui/input'
 
 import { useSheet } from '@/hooks/use-sheet'
 import { convertToMiliunits } from '@/lib/utils'
+import { Checkbox } from '../ui/checkbox'
 
 const formSchema = z.object({
 	amount: z.string().min(1),
 	dueDate: z.coerce.date(),
+	isPaid: z.optional(z.boolean()),
 	name: z.string().min(1)
 })
 
@@ -48,17 +50,15 @@ export function NewBillForm({ defaultValues }: Props) {
 	async function onSubmit(value: FormValues) {
 		const amount = parseFloat(value.amount)
 		const amountInMiliunits = convertToMiliunits(amount)
-
-		// const formattedDate = value.dueDate.toISOString().split('T')[0]
 		const formattedDate = formatDate(value.dueDate, 'MM/dd/yyyy')
 
 		try {
 			await createBill({
 				amount: amountInMiliunits,
 				dueDate: formattedDate,
+				isPaid: value.isPaid ?? false,
 				name: value.name
 			})
-			console.log(value)
 			toast.success(`${value.name} - $${value.amount} added successfully.`)
 		} catch (error) {
 			console.error(error)
@@ -108,7 +108,8 @@ export function NewBillForm({ defaultValues }: Props) {
 											</FormDescription> */}
 							<FormMessage />
 						</FormItem>
-					)}></FormField>
+					)}
+				/>
 				<FormField
 					control={form.control}
 					name='amount'
@@ -124,7 +125,25 @@ export function NewBillForm({ defaultValues }: Props) {
 							{/* <FormDescription>Enter bill amount.</FormDescription> */}
 							<FormMessage />
 						</FormItem>
-					)}></FormField>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name='isPaid'
+					render={({ field }) => (
+						<FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
+							<FormControl>
+								<Checkbox
+									checked={field.value}
+									onCheckedChange={field.onChange}
+								/>
+							</FormControl>
+							<div className='space-y-1 leading-none'>
+								<FormLabel>Paid</FormLabel>
+							</div>
+						</FormItem>
+					)}
+				/>
 				<Button className='w-full'>Create Bill</Button>
 			</form>
 		</Form>

@@ -7,6 +7,7 @@ export default defineSchema({
 	bills: defineTable({
 		amount: v.float64(),
 		dueDate: v.string(),
-		name: v.string()
+		name: v.string(),
+		isPaid: v.boolean(),
 	}).index('by_dueDate', ['dueDate'])
 })
