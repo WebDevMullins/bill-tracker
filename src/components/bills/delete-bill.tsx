@@ -9,7 +9,7 @@ type DeleteBillProps = {
 }
 
 export function DeleteBill({ billId }: DeleteBillProps) {
-	const deleteBill = useMutation(api.bill.deleteBill)
+	const deleteBill = useMutation(api.bills.deleteBill)
 
 	const handleDelete = async (id: Id<'bills'>) => {
 		try {

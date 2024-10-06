@@ -8,7 +8,7 @@ import CreateButton from '@/components/create-button'
 import { DataTable } from '@/components/data-table/data-table'
 
 export default function Home() {
-	const bills = useQuery(api.bill.getBills)
+	const bills = useQuery(api.bills.getBills)
 
 	return (
 		<div className='container py-12'>

@@ -8,6 +8,6 @@ export default defineSchema({
 		amount: v.float64(),
 		dueDate: v.string(),
 		name: v.string(),
-		isPaid: v.boolean(),
+		isPaid: v.boolean()
 	}).index('by_dueDate', ['dueDate'])
 })

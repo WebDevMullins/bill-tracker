@@ -41,3 +41,13 @@ export const deleteBill = mutation({
 		return await ctx.db.delete(args.id)
 	}
 })
+
+// Pay a bill
+export const payBill = mutation({
+	args: {
+		id: v.id('bills')
+	},
+	handler: async (ctx, args) => {
+		return await ctx.db.patch(args.id, { isPaid: true })
+	}
+})

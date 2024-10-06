@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { Id } from '../../../convex/_generated/dataModel'
 
 import { DeleteBill } from './delete-bill'
+import { PayBill } from './pay-bill'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -25,6 +26,7 @@ const billSchema = z.object({
 	_id: z.string(),
 	amount: z.number(),
 	dueDate: z.string(),
+	isPaid: z.boolean(),
 	name: z.string()
 })
 
@@ -47,9 +49,7 @@ export function TableRowActions<TData>({
 				<DropdownMenuLabel>{bill.name}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>View bill details</DropdownMenuItem>
-				<DropdownMenuItem className='text-emerald-500'>
-					{/* <PayBill billId={bill.id} /> */}
-				</DropdownMenuItem>
+				<PayBill billId={bill._id as Id<'bills'>} />
 				<DropdownMenuSeparator />
 				<DeleteBill
 					billId={bill._id as Id<'bills'>}

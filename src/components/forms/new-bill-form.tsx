@@ -40,7 +40,7 @@ type Props = {
 
 export function NewBillForm({ defaultValues }: Props) {
 	const { onClose } = useSheet()
-	const createBill = useMutation(api.bill.createBill)
+	const createBill = useMutation(api.bills.createBill)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
