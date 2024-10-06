@@ -1,57 +1,38 @@
 'use client'
 
-import { useMutation, useQuery } from 'convex/react'
-import { toast } from 'sonner'
+import { useQuery } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
-import { Id } from '../../../convex/_generated/dataModel'
 
-import CreateButton from '@/components/create-button'
-import { Button } from '@/components/ui/button'
-
-import { DataTable } from '@/components/data-table/data-table'
-import { formatCurrency } from '@/lib/utils'
 import { columns } from '@/components/bills/columns'
+import CreateButton from '@/components/create-button'
+import { DataTable } from '@/components/data-table/data-table'
 
 export default function Home() {
 	const bills = useQuery(api.bill.getBills)
-	const deleteBill = useMutation(api.bill.deleteBill)
-
-	const handleDelete = async (id: Id<'bills'>) => {
-		try {
-			await deleteBill({ id })
-			toast.success('Bill deleted')
-		} catch (error) {
-			console.error(error)
-			toast.error('Error deleting bill')
-		}
-	}
 
 	return (
-		<div className='container space-y-4 py-12'>
-			<h1 className='text-4xl'>Bill Tracker</h1>
-			<CreateButton />
-			{bills?.map((bill) => (
-				<div
-					key={bill._id}
-					className='mt-4 flex items-center justify-between'>
-					<div>
-						<h2 className='text-xl'>{bill.name}</h2>
-						<p className='text-gray-500'>{formatCurrency(bill.amount)}</p>
-						<p className='text-gray-500'>Due Date: {bill.dueDate}</p>
+		<div className='container py-12'>
+			<div className='overflow-hidden rounded-[0.5rem] border bg-background shadow'>
+				<div className='hidden h-full flex-1 flex-col space-y-8 p-8 md:flex'>
+					<div className='flex items-center justify-between space-y-2'>
+						<div>
+							<h2 className='text-2xl font-bold tracking-tight'>Bills</h2>
+							<p className='text-muted-foreground'>
+								Here&apos;s a list of your bills
+							</p>
+						</div>
+						<div className='flex items-center space-x-2'>
+							<CreateButton />
+						</div>
 					</div>
-					<Button
-						variant='outline'
-						onClick={() => handleDelete(bill._id)}>
-						Delete
-					</Button>
+					<DataTable
+						columns={columns}
+						data={bills || []}
+						filterKey='name'
+						// options={['status', 'priority']}
+					/>
 				</div>
-			))}
-			<DataTable
-				columns={columns}
-				data={bills || []}
-				filterKey='name'
-				// options={['status', 'priority']}
-			/>
+			</div>
 		</div>
 	)
 }

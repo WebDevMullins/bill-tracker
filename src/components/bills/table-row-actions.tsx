@@ -2,6 +2,10 @@
 
 import { type Row } from '@tanstack/react-table'
 import { MoreHorizontalIcon } from 'lucide-react'
+import { z } from 'zod'
+import { Id } from '../../../convex/_generated/dataModel'
+
+import { DeleteBill } from './delete-bill'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,19 +17,21 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
-// import { BillSchema } from '@/server/db/schema'
-// import { DeleteBillItem } from './delete-bill-item'
-// import { PayBill } from './pay-bill'
-
 interface DataTableRowActionsProps<TData> {
 	row: Row<TData>
 }
 
+const billSchema = z.object({
+	_id: z.string(),
+	amount: z.number(),
+	dueDate: z.string(),
+	name: z.string()
+})
+
 export function TableRowActions<TData>({
 	row
 }: DataTableRowActionsProps<TData>) {
-	// const bill = BillSchema.parse(row.original)
-	// const bill = row.original
+	const bill = billSchema.parse(row.original)
 
 	return (
 		<DropdownMenu>
@@ -37,20 +43,20 @@ export function TableRowActions<TData>({
 					<MoreHorizontalIcon className='h-4 w-4' />
 				</Button>
 			</DropdownMenuTrigger>
-			{/* <DropdownMenuContent align='end'>
-					<DropdownMenuLabel>{bill.name}</DropdownMenuLabel>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem>View bill details</DropdownMenuItem>
-					<DropdownMenuItem className='text-emerald-500'>
-					<PayBill billId={bill.id} />
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DeleteBillItem
-						billId={bill.id}
-						isRecurring={bill.isRecurring}
-						recurringId={bill.recurringId ?? undefined}
-					/>
-				</DropdownMenuContent> */}
+			<DropdownMenuContent align='end'>
+				<DropdownMenuLabel>{bill.name}</DropdownMenuLabel>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem>View bill details</DropdownMenuItem>
+				<DropdownMenuItem className='text-emerald-500'>
+					{/* <PayBill billId={bill.id} /> */}
+				</DropdownMenuItem>
+				<DropdownMenuSeparator />
+				<DeleteBill
+					billId={bill._id as Id<'bills'>}
+					// isRecurring={bill.isRecurring}
+					// recurringId={bill.recurringId ?? undefined}
+				/>
+			</DropdownMenuContent>
 		</DropdownMenu>
 	)
 }
