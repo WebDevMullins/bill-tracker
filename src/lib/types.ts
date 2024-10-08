@@ -5,3 +5,9 @@ export type Bill = {
 	isPaid: boolean
 	name: string
 }
+
+export type Payee = {
+	_id: string
+	name: string
+	website: string
+}

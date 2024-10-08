@@ -7,8 +7,8 @@ export default defineSchema({
 		amount: v.float64(),
 		dueDate: v.string(),
 		name: v.string(),
-		isPaid: v.boolean(),
-		payeeId: v.id('payees') // foreign key to payees table
+		isPaid: v.boolean()
+		// payeeId: v.id('payees') // foreign key to payees table
 	}).index('by_dueDate', ['dueDate']),
 
 	// payees table schema

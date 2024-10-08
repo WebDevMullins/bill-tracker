@@ -8,6 +8,7 @@ export const createBill = mutation({
 		dueDate: v.string(),
 		isPaid: v.optional(v.boolean()),
 		name: v.string()
+		// payeeId: v.id('payees')
 	},
 	handler: async (ctx, args) => {
 		const newBill = await ctx.db.insert('bills', {
@@ -15,6 +16,7 @@ export const createBill = mutation({
 			dueDate: args.dueDate,
 			isPaid: args.isPaid ?? false,
 			name: args.name
+			// payeeId: args.payeeId
 		})
 		return newBill
 	}
