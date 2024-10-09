@@ -3,7 +3,8 @@ export type Bill = {
 	amount: number
 	dueDate: string
 	isPaid: boolean
-	name: string
+	payeeName: string
+	payeeId: string
 }
 
 export type Payee = {

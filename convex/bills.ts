@@ -7,16 +7,14 @@ export const createBill = mutation({
 		amount: v.number(),
 		dueDate: v.string(),
 		isPaid: v.optional(v.boolean()),
-		name: v.string()
-		// payeeId: v.id('payees')
+		payeeId: v.id('payees')
 	},
 	handler: async (ctx, args) => {
 		const newBill = await ctx.db.insert('bills', {
 			amount: args.amount,
 			dueDate: args.dueDate,
 			isPaid: args.isPaid ?? false,
-			name: args.name
-			// payeeId: args.payeeId
+			payeeId: args.payeeId
 		})
 		return newBill
 	}
@@ -30,7 +28,19 @@ export const getBills = query({
 			.withIndex('by_dueDate')
 			.order('asc')
 			.collect()
-		return bills
+
+		// Fetch payee names for each bill
+		const billsWithPayees = await Promise.all(
+			bills.map(async (bill) => {
+				const payee = await ctx.db.get(bill.payeeId)
+				return {
+					...bill,
+					payeeName: payee!.name
+				}
+			})
+		)
+
+		return billsWithPayees
 	}
 })
 

@@ -28,7 +28,8 @@ const billSchema = z.object({
 	amount: z.number(),
 	dueDate: z.string(),
 	isPaid: z.boolean(),
-	name: z.string()
+	payeeId: z.string(),
+	payeeName: z.string()
 })
 
 export function TableRowActions<TData>({
@@ -47,7 +48,7 @@ export function TableRowActions<TData>({
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end'>
-				<DropdownMenuLabel>{bill.name}</DropdownMenuLabel>
+				<DropdownMenuLabel>{bill.payeeName}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>View bill details</DropdownMenuItem>
 				{bill.isPaid ? (

@@ -1,8 +1,9 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from 'convex/react'
+import { useMutation, useQuery } from 'convex/react'
 import { formatDate } from 'date-fns'
+// import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -10,6 +11,7 @@ import { api } from '../../../convex/_generated/api'
 
 import { DatePicker } from '@/components/date-picker'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
 	Form,
 	FormControl,
@@ -20,16 +22,24 @@ import {
 	FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select'
 
 import { useSheet } from '@/hooks/use-sheet'
+// import { Payee } from '@/lib/types'
 import { convertToMiliunits } from '@/lib/utils'
-import { Checkbox } from '../ui/checkbox'
+import { Id } from '../../../convex/_generated/dataModel'
 
 const formSchema = z.object({
 	amount: z.string().min(1),
 	dueDate: z.coerce.date(),
 	isPaid: z.optional(z.boolean()),
-	name: z.string().min(1)
+	payeeId: z.string()
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -41,6 +51,7 @@ type Props = {
 export function NewBillForm({ defaultValues }: Props) {
 	const { onClose } = useSheet()
 	const createBill = useMutation(api.bills.createBill)
+	const payees = useQuery(api.payees.getPayees) ?? []
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -57,9 +68,9 @@ export function NewBillForm({ defaultValues }: Props) {
 				amount: amountInMiliunits,
 				dueDate: formattedDate,
 				isPaid: value.isPaid ?? false,
-				name: value.name
+				payeeId: value.payeeId as Id<'payees'>
 			})
-			toast.success(`${value.name} - $${value.amount} added successfully.`)
+			toast.success(`Bill added successfully.`)
 		} catch (error) {
 			console.error(error)
 			const errorMessage =
@@ -92,20 +103,30 @@ export function NewBillForm({ defaultValues }: Props) {
 					)}
 				/>
 				<FormField
+					name='payeeId'
 					control={form.control}
-					name='name'
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Name</FormLabel>
-							<FormControl>
-								<Input
-									placeholder='Netflix'
-									{...field}
-								/>
-							</FormControl>
-							{/* <FormDescription>
-												Enter the name of the bill.
-											</FormDescription> */}
+							<FormLabel>Payee</FormLabel>
+							<Select
+								onValueChange={field.onChange}
+								defaultValue={field.value}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder='Select a payee' />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									{payees.map((payee) => (
+										<SelectItem
+											key={payee._id}
+											value={payee._id}
+											className='capitalize'>
+											{payee.name}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 							<FormMessage />
 						</FormItem>
 					)}

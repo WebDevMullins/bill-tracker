@@ -28,7 +28,7 @@ export default function BillsPage() {
 					<DataTable
 						columns={columns}
 						data={bills || []}
-						filterKey='name'
+						filterKey='payeeName'
 						// options={['status', 'priority']}
 					/>
 				</div>

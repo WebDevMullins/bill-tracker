@@ -59,56 +59,23 @@ export const columns: ColumnDef<Bill>[] = [
 		}
 	},
 	{
-		accessorKey: 'name',
+		accessorKey: 'payeeName',
 		header: ({ column }) => (
 			<DataTableColumnHeader
 				column={column}
-				title='Name'
+				title='Payee'
 			/>
 		),
 		cell: ({ row }) => {
 			return (
 				<div className='flex space-x-2'>
 					<span className='max-w-[500px] truncate font-medium'>
-						{row.getValue('name')}
+						{row.getValue('payeeName')}
 					</span>
 				</div>
 			)
 		}
 	},
-	// {
-	// 	accessorKey: 'account',
-	// 	header: ({ column }) => (
-	// 		<DataTableColumnHeader
-	// 			column={column}
-	// 			title='Account'
-	// 		/>
-	// 	),
-	// 	cell: ({ row }) => (
-	// 		<div className='capitalize'>{row.getValue('account')}</div>
-	// 	)
-	// },
-	// {
-	// 	accessorKey: 'isRecurring',
-	// 	header: ({ column }) => (
-	// 		<DataTableColumnHeader
-	// 			column={column}
-	// 			title='Recurring'
-	// 		/>
-	// 	),
-	// 	cell: ({ row }) => {
-	// 		const value = row.getValue('isRecurring')
-	// 		return (
-	// 			<div className='ml-6'>
-	// 				{value ? (
-	// 					<CheckIcon className='size-4 text-emerald-500' />
-	// 				) : (
-	// 					<XIcon className='size-4 text-red-500' />
-	// 				)}
-	// 			</div>
-	// 		)
-	// 	}
-	// },
 	{
 		accessorKey: 'isPaid',
 		header: ({ column }) => (
