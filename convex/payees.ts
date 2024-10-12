@@ -27,3 +27,14 @@ export const getPayees = query({
 		return payees
 	}
 })
+
+// Get a single payee by ID
+export const getPayeeById = query({
+	args: {
+		payeeId: v.id('payees')
+	},
+	handler: async (ctx, args) => {
+		const payee = await ctx.db.get(args.payeeId)
+		return payee
+	}
+})
