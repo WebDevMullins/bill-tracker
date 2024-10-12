@@ -7,12 +7,15 @@ import { useParams } from 'next/navigation'
 
 import CreateButton from '@/components/create-button'
 import Link from 'next/link'
+import { DataTable } from '@/components/data-table/data-table'
+import { columns } from '@/components/bills/columns'
 
 export default function PayeePage() {
 	const params = useParams()
 	const payeeId = params?.payeeId as Id<'payees'>
 
 	const payee = useQuery(api.payees.getPayeeById, { payeeId })
+	const billsByPayee = useQuery(api.bills.getBillsByPayeeId, { payeeId })
 
 	const website = payee?.website as string
 	const formattedWebsite =
@@ -39,13 +42,14 @@ export default function PayeePage() {
 						</div>
 						<div className='flex items-center space-x-2'>
 							<CreateButton sheetType='payee' />
+							<CreateButton sheetType='bill' />
 						</div>
 					</div>
-					{/* <DataTable
+					<DataTable
 						columns={columns}
-						data={payees || []}
+						data={billsByPayee || []}
 						filterKey='name'
-					/> */}
+					/>
 				</div>
 			</div>
 		</div>

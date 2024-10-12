@@ -73,3 +73,30 @@ export const unpayBill = mutation({
 		return await ctx.db.patch(args.id, { isPaid: false })
 	}
 })
+
+// Get bills by payee ID
+export const getBillsByPayeeId = query({
+	args: {
+		payeeId: v.id('payees')
+	},
+	handler: async (ctx, args) => {
+		const bills = await ctx.db
+			.query('bills')
+			.withIndex('by_dueDate')
+			.filter((q) => q.eq(q.field('payeeId'), args.payeeId))
+			.collect()
+
+		// Fetch payee names for each bill
+		const billsWithPayees = await Promise.all(
+			bills.map(async (bill) => {
+				const payee = await ctx.db.get(bill.payeeId)
+				return {
+					...bill,
+					payeeName: payee!.name
+				}
+			})
+		)
+
+		return billsWithPayees
+	}
+})
