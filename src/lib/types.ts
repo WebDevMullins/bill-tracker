@@ -1,6 +1,7 @@
 export type Bill = {
 	_id: string
 	amount: number
+	categoryId: string
 	dueDate: string
 	isPaid: boolean
 	payeeName: string

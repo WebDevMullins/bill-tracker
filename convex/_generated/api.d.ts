@@ -11,12 +11,13 @@
  */
 
 import type {
-	ApiFromModules,
-	FilterApi,
-	FunctionReference
-} from 'convex/server'
-import type * as bills from '../bills.js'
-import type * as payees from '../payees.js'
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
+import type * as bills from "../bills.js";
+import type * as categories from "../categories.js";
+import type * as payees from "../payees.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -27,16 +28,17 @@ import type * as payees from '../payees.js'
  * ```
  */
 declare const fullApi: ApiFromModules<{
-	bills: typeof bills
-	payees: typeof payees
-}>
+  bills: typeof bills;
+  categories: typeof categories;
+  payees: typeof payees;
+}>;
 export declare const api: FilterApi<
-	typeof fullApi,
-	FunctionReference<any, 'public'>
->
+  typeof fullApi,
+  FunctionReference<any, "public">
+>;
 export declare const internal: FilterApi<
-	typeof fullApi,
-	FunctionReference<any, 'internal'>
->
+  typeof fullApi,
+  FunctionReference<any, "internal">
+>;
 
 /* prettier-ignore-end */

@@ -5,6 +5,7 @@ import { mutation, query } from './_generated/server'
 export const createBill = mutation({
 	args: {
 		amount: v.number(),
+		categoryId: v.id('categories'),
 		dueDate: v.string(),
 		isPaid: v.optional(v.boolean()),
 		payeeId: v.id('payees')
@@ -12,6 +13,7 @@ export const createBill = mutation({
 	handler: async (ctx, args) => {
 		const newBill = await ctx.db.insert('bills', {
 			amount: args.amount,
+			categoryId: args.categoryId,
 			dueDate: args.dueDate,
 			isPaid: args.isPaid ?? false,
 			payeeId: args.payeeId
