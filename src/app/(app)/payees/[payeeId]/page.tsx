@@ -3,12 +3,15 @@
 import { api } from '@/../convex/_generated/api'
 import { Id } from '@/../convex/_generated/dataModel'
 import { useQuery } from 'convex/react'
+import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
-import CreateButton from '@/components/create-button'
-import Link from 'next/link'
-import { DataTable } from '@/components/data-table/data-table'
 import { columns } from '@/components/bills/columns'
+import { Chart } from '@/components/chart'
+import CreateButton from '@/components/create-button'
+import { DataTable } from '@/components/data-table/data-table'
+
+import { convertDateToMonth, convertFromMiliunits } from '@/lib/utils'
 
 export default function PayeePage() {
 	const params = useParams()
@@ -16,6 +19,10 @@ export default function PayeePage() {
 
 	const payee = useQuery(api.payees.getPayeeById, { payeeId })
 	const billsByPayee = useQuery(api.bills.getBillsByPayeeId, { payeeId })
+	const chartData = billsByPayee?.map((bill) => ({
+		month: convertDateToMonth(bill.dueDate),
+		amount: convertFromMiliunits(bill.amount)
+	}))
 
 	const website = payee?.website as string
 	const formattedWebsite =
@@ -50,6 +57,7 @@ export default function PayeePage() {
 						data={billsByPayee || []}
 						filterKey='name'
 					/>
+					<Chart data={chartData || []} />
 				</div>
 			</div>
 		</div>

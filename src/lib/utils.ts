@@ -22,3 +22,7 @@ export function formatCurrency(amount: number) {
 		minimumFractionDigits: 2
 	}).format(finalAmount)
 }
+
+export function convertDateToMonth(date: string) {
+	return new Date(date).toLocaleString('default', { month: 'long' })
+}

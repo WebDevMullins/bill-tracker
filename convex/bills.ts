@@ -100,3 +100,22 @@ export const getBillsByPayeeId = query({
 		return billsWithPayees
 	}
 })
+
+// Get bills by payee ID, only return dueDate and amount
+export const getBillsByPayeeIdForChart = query({
+	args: {
+		payeeId: v.id('payees')
+	},
+	handler: async (ctx, args) => {
+		const bills = await ctx.db
+			.query('bills')
+			.withIndex('by_dueDate')
+			.filter((q) => q.eq(q.field('payeeId'), args.payeeId))
+			.collect()
+
+		return bills.map((bill) => ({
+			dueDate: bill.dueDate,
+			amount: bill.amount
+		}))
+	}
+})
