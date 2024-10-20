@@ -3,11 +3,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from 'convex/react'
 import { formatDate } from 'date-fns'
-// import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { api } from '../../../convex/_generated/api'
 
 import { DatePicker } from '@/components/date-picker'
 import { Button } from '@/components/ui/button'
@@ -29,16 +27,17 @@ import {
 	SelectTrigger,
 	SelectValue
 } from '@/components/ui/select'
-
 import { useSheet } from '@/hooks/use-sheet'
-// import { Payee } from '@/lib/types'
 import { convertToMiliunits } from '@/lib/utils'
+
+import { api } from '../../../convex/_generated/api'
 import { Id } from '../../../convex/_generated/dataModel'
 
 const formSchema = z.object({
 	amount: z.string().min(1),
 	dueDate: z.coerce.date(),
 	isPaid: z.optional(z.boolean()),
+	categoryId: z.string(),
 	payeeId: z.string()
 })
 
@@ -52,6 +51,8 @@ export function NewBillForm({ defaultValues }: Props) {
 	const { onClose } = useSheet()
 	const createBill = useMutation(api.bills.createBill)
 	const payees = useQuery(api.payees.getPayees) ?? []
+
+	const categories = useQuery(api.categories.getCategories) ?? []
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -68,6 +69,7 @@ export function NewBillForm({ defaultValues }: Props) {
 				amount: amountInMiliunits,
 				dueDate: formattedDate,
 				isPaid: value.isPaid ?? false,
+				categoryId: value.categoryId as Id<'categories'>,
 				payeeId: value.payeeId as Id<'payees'>
 			})
 			toast.success(`Bill added successfully.`)
@@ -123,6 +125,35 @@ export function NewBillForm({ defaultValues }: Props) {
 											value={payee._id}
 											className='capitalize'>
 											{payee.name}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					name='categoryId'
+					control={form.control}
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Category</FormLabel>
+							<Select
+								onValueChange={field.onChange}
+								defaultValue={field.value}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder='Select a category' />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									{categories.map((category) => (
+										<SelectItem
+											key={category._id}
+											value={category._id}
+											className='capitalize'>
+											{category.name}
 										</SelectItem>
 									))}
 								</SelectContent>

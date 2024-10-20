@@ -2,9 +2,9 @@ import { create } from 'zustand'
 
 type UseSheetProps = {
 	isOpen: boolean
-	sheetType: 'bill' | 'payee' | null
+	sheetType: 'bill' | 'payee' | 'category' | null
 	onClose: () => void
-	onOpen: (type: 'bill' | 'payee') => void
+	onOpen: (type: 'bill' | 'payee' | 'category') => void
 }
 
 export const useSheet = create<UseSheetProps>((set) => ({

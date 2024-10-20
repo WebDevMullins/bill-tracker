@@ -1,4 +1,5 @@
 import { v } from 'convex/values'
+
 import { mutation, query } from './_generated/server'
 
 // Create a new bill
@@ -31,18 +32,21 @@ export const getBills = query({
 			.order('asc')
 			.collect()
 
-		// Fetch payee names for each bill
-		const billsWithPayees = await Promise.all(
+		// Fetch payee and category names for each bill
+		const billsWithCategoryiesAndPayees = await Promise.all(
 			bills.map(async (bill) => {
 				const payee = await ctx.db.get(bill.payeeId)
+				const category = await ctx.db.get(bill.categoryId)
+
 				return {
 					...bill,
-					payeeName: payee!.name
+					categoryName: category ? category.name : 'Unknown Category',
+					payeeName: payee ? payee.name : 'Unknown Payee'
 				}
 			})
 		)
 
-		return billsWithPayees
+		return billsWithCategoryiesAndPayees
 	}
 })
 
@@ -88,13 +92,16 @@ export const getBillsByPayeeId = query({
 			.filter((q) => q.eq(q.field('payeeId'), args.payeeId))
 			.collect()
 
-		// Fetch payee names for each bill
+		// Fetch payee and category names for each bill
 		const billsWithPayees = await Promise.all(
 			bills.map(async (bill) => {
 				const payee = await ctx.db.get(bill.payeeId)
+				const category = await ctx.db.get(bill.categoryId)
+
 				return {
 					...bill,
-					payeeName: payee!.name
+					categoryName: category ? category.name : 'Unknown Category',
+					payeeName: payee ? payee.name : 'Unknown Payee'
 				}
 			})
 		)

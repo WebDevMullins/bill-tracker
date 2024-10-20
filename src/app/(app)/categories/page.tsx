@@ -2,16 +2,14 @@
 
 import { useQuery } from 'convex/react'
 
-import { columns } from '@/components/bills/columns'
+import { columns } from '@/components/categories/columns'
 import CreateButton from '@/components/create-button'
 import { DataTable } from '@/components/data-table/data-table'
 
 import { api } from '../../../../convex/_generated/api'
 
-export default function BillsPage() {
-	const bills = useQuery(api.bills.getBills)
-	
-	console.log(bills)
+export default function CategoriesPage() {
+	const categories = useQuery(api.categories.getCategories)
 
 	return (
 		<div className='container py-12'>
@@ -19,19 +17,19 @@ export default function BillsPage() {
 				<div className='hidden h-full flex-1 flex-col space-y-8 p-8 md:flex'>
 					<div className='flex items-center justify-between space-y-2'>
 						<div>
-							<h2 className='text-2xl font-bold tracking-tight'>Bills</h2>
+							<h2 className='text-2xl font-bold tracking-tight'>Categories</h2>
 							<p className='text-muted-foreground'>
-								Here&apos;s a list of your bills
+								Here&apos;s a list of your categories
 							</p>
 						</div>
 						<div className='flex items-center space-x-2'>
-							<CreateButton sheetType='bill' />
+							<CreateButton sheetType='category' />
 						</div>
 					</div>
 					<DataTable
 						columns={columns}
-						data={bills || []}
-						filterKey='payeeName'
+						data={categories || []}
+						filterKey='name'
 						// options={['status', 'priority']}
 					/>
 				</div>

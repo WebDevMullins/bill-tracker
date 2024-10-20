@@ -11,7 +11,7 @@ const links = [
 	// { label: 'Dashboard', href: '/dashboard' },
 	// { label: 'Accounts', href: '/accounts' },
 	{ label: 'Bills', href: '/bills' },
-	// { label: 'Categories', href: '/categories' },
+	{ label: 'Categories', href: '/categories' },
 	{ label: 'Payees', href: '/payees' }
 	// { label: 'Transactions', href: '/transactions' },
 	// { label: 'Settings', href: '/settings' }

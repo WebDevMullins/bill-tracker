@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { useSheet } from '@/hooks/use-sheet'
 
 type CreateButtonProps = {
-	sheetType: 'bill' | 'payee'
+	sheetType: 'bill' | 'payee' | 'category'
 }
 
 export default function CreateButton({ sheetType }: CreateButtonProps) {
@@ -17,6 +17,9 @@ export default function CreateButton({ sheetType }: CreateButtonProps) {
 		if (sheetType === 'bill') {
 			// Open the bill sheet
 			onOpen('bill')
+		} else if (sheetType === 'category') {
+			// Open the category sheet
+			onOpen('category')
 		} else if (sheetType === 'payee') {
 			// Open the payee sheet
 			onOpen('payee')

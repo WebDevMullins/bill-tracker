@@ -20,8 +20,7 @@ import { Input } from '@/components/ui/input'
 import { useSheet } from '@/hooks/use-sheet'
 
 const formSchema = z.object({
-	name: z.string().min(1),
-	website: z.string().min(1)
+	name: z.string().min(1)
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -30,9 +29,9 @@ type Props = {
 	defaultValues?: FormValues
 }
 
-export function NewPayeeForm({ defaultValues }: Props) {
+export function NewCategoryForm({ defaultValues }: Props) {
 	const { onClose } = useSheet()
-	const createPayee = useMutation(api.payees.createPayee)
+	const createCategory = useMutation(api.categories.createCategory)
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -41,9 +40,8 @@ export function NewPayeeForm({ defaultValues }: Props) {
 
 	async function onSubmit(value: FormValues) {
 		try {
-			await createPayee({
-				name: value.name,
-				website: value.website
+			await createCategory({
+				name: value.name
 			})
 			toast.success(`${value.name} added successfully.`)
 		} catch (error) {
@@ -78,23 +76,7 @@ export function NewPayeeForm({ defaultValues }: Props) {
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name='website'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Website</FormLabel>
-							<FormControl>
-								<Input
-									placeholder='www.netflix.com'
-									{...field}
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<Button className='w-full'>Create Payee</Button>
+				<Button className='w-full'>Create Category</Button>
 			</form>
 		</Form>
 	)

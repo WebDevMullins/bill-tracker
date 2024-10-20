@@ -1,14 +1,14 @@
 'use client'
 
 import { type ColumnDef } from '@tanstack/react-table'
-
-import { Bill } from '@/lib/types'
+import { CheckIcon, XIcon } from 'lucide-react'
 
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-headers'
 // import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Bill } from '@/lib/types'
 import { formatCurrency } from '@/lib/utils'
-import { CheckIcon, XIcon } from 'lucide-react'
+
 import { TableRowActions } from './table-row-actions'
 
 export const columns: ColumnDef<Bill>[] = [
@@ -98,7 +98,7 @@ export const columns: ColumnDef<Bill>[] = [
 		}
 	},
 	{
-		accessorKey: 'category',
+		accessorKey: 'categoryName',
 		header: ({ column }) => (
 			<DataTableColumnHeader
 				column={column}
@@ -106,7 +106,7 @@ export const columns: ColumnDef<Bill>[] = [
 			/>
 		),
 		cell: ({ row }) => (
-			<div className='capitalize'>{row.getValue('category')}</div>
+			<div className='capitalize'>{row.getValue('categoryName')}</div>
 		)
 	},
 	{
@@ -119,18 +119,7 @@ export const columns: ColumnDef<Bill>[] = [
 		),
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue('amount'))
-			// const isPaid = row.getValue('isPaid')
-
 			return <div className='font-medium'>{formatCurrency(amount)}</div>
-
-			// return (
-			// 	<Badge
-			// 		// variant={!isPaid ? 'expense' : 'income'}
-			// 		variant={!isPaid ? 'default' : 'secondary'}
-			// 		className='px-3.5 py-2.5 text-xs font-medium'>
-			// 		{formatCurrency(amount)}
-			// 	</Badge>
-			// )
 		}
 	},
 	{
