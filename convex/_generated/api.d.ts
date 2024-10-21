@@ -18,6 +18,7 @@ import type {
 import type * as bills from "../bills.js";
 import type * as categories from "../categories.js";
 import type * as payees from "../payees.js";
+import type * as seed from "../seed.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   bills: typeof bills;
   categories: typeof categories;
   payees: typeof payees;
+  seed: typeof seed;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
