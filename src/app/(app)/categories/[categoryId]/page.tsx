@@ -7,15 +7,18 @@ import { useParams } from 'next/navigation'
 import { api } from '@/../convex/_generated/api'
 import { Id } from '@/../convex/_generated/dataModel'
 import { columns } from '@/components/categories/columns'
-// import { Chart } from '@/components/chart'
+import { Chart } from '@/components/chart'
 import CreateButton from '@/components/create-button'
 import { DataTable } from '@/components/data-table/data-table'
+import { formatCurrency } from '@/lib/utils'
 
 export default function CategoryPage() {
 	const params = useParams()
 	const categoryId = params?.categoryId as Id<'categories'>
 
 	const category = useQuery(api.categories.getCategoryById, { categoryId })
+	const total = useQuery(api.categories.getCategoryTotal, { categoryId })
+	const totalSpent = formatCurrency(total!)
 
 	return (
 		<div className='container py-12'>
@@ -30,7 +33,7 @@ export default function CategoryPage() {
 								<Link
 									href={'#'}
 									target='_blank'>
-									Go to website
+									Go to website {totalSpent!}
 								</Link>
 							</p>
 						</div>
@@ -44,7 +47,7 @@ export default function CategoryPage() {
 						data={category ? [category] : []}
 						filterKey='name'
 					/>
-					{/* <Chart data={chartData || []} /> */}
+					<Chart data={total} />
 				</div>
 			</div>
 		</div>
