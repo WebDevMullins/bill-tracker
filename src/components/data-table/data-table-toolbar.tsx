@@ -6,18 +6,21 @@ import { CrossIcon, Trash2Icon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+import { DateRangePicker } from '../date-range-picker'
 // import { DataTableFacetedFilter } from './data-table-faceted-filter'
 import { DataTableViewOptions } from './data-table-view-options'
 
 interface DataTableToolbarProps<TData> {
 	table: Table<TData>
 	filterKey: string
+	showDateRangePicker?: boolean
 	// options: string[]
 }
 
 export function DataTableToolbar<TData>({
 	table,
-	filterKey
+	filterKey,
+	showDateRangePicker = true
 	// options
 }: DataTableToolbarProps<TData>) {
 	const isFiltered = table.getState().columnFilters.length > 0
@@ -69,6 +72,7 @@ export function DataTableToolbar<TData>({
 						Delete {table.getFilteredSelectedRowModel().rows.length} items
 					</Button>
 				)}
+				{showDateRangePicker && <DateRangePicker />}
 				<DataTableViewOptions table={table} />
 			</div>
 		</div>

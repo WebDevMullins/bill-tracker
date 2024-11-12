@@ -10,7 +10,7 @@ import { api } from '../../../../convex/_generated/api'
 
 export default function BillsPage() {
 	const bills = useQuery(api.bills.getBills)
-	
+
 	console.log(bills)
 
 	return (
@@ -32,6 +32,7 @@ export default function BillsPage() {
 						columns={columns}
 						data={bills || []}
 						filterKey='payeeName'
+						showDateRangePicker={true}
 						// options={['status', 'priority']}
 					/>
 				</div>

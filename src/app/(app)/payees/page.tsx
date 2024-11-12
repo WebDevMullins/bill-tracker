@@ -1,11 +1,12 @@
 'use client'
 
 import { useQuery } from 'convex/react'
-import { api } from '../../../../convex/_generated/api'
 
 import CreateButton from '@/components/create-button'
 import { DataTable } from '@/components/data-table/data-table'
 import { columns } from '@/components/payees/columns'
+
+import { api } from '../../../../convex/_generated/api'
 
 export default function PayeesPage() {
 	const payees = useQuery(api.payees.getPayees)
@@ -29,6 +30,7 @@ export default function PayeesPage() {
 						columns={columns}
 						data={payees || []}
 						filterKey='name'
+						showDateRangePicker={false}
 						// options={['status', 'priority']}
 					/>
 				</div>

@@ -30,6 +30,7 @@ export default function CategoriesPage() {
 						columns={columns}
 						data={categories || []}
 						filterKey='name'
+						showDateRangePicker={false}
 						// options={['status', 'priority']}
 					/>
 				</div>

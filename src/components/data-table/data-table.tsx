@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-
 import {
+	type ColumnDef,
+	type ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
 	getFacetedRowModel,
@@ -10,12 +10,11 @@ import {
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
-	useReactTable,
-	type ColumnDef,
-	type ColumnFiltersState,
 	type SortingState,
+	useReactTable,
 	type VisibilityState
 } from '@tanstack/react-table'
+import { useState } from 'react'
 
 import {
 	Table,
@@ -25,6 +24,7 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table'
+
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
 
@@ -32,13 +32,15 @@ interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
 	filterKey: string
+	showDateRangePicker?: boolean
 	// options: string[]
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
-	filterKey
+	filterKey,
+	showDateRangePicker = true
 	// options
 }: DataTableProps<TData, TValue>) {
 	const [rowSelection, setRowSelection] = useState({})
@@ -73,6 +75,7 @@ export function DataTable<TData, TValue>({
 			<DataTableToolbar
 				table={table}
 				filterKey={filterKey}
+				showDateRangePicker={showDateRangePicker}
 				// options={options}
 			/>
 			<div className='rounded-md border'>
