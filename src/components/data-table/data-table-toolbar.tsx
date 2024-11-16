@@ -14,6 +14,7 @@ interface DataTableToolbarProps<TData> {
 	table: Table<TData>
 	filterKey: string
 	showDateRangePicker?: boolean
+	onDateRangeChange?: (range: {from: Date; to: Date}) => void
 	// options: string[]
 }
 
@@ -72,7 +73,17 @@ export function DataTableToolbar<TData>({
 						Delete {table.getFilteredSelectedRowModel().rows.length} items
 					</Button>
 				)}
-				{showDateRangePicker && <DateRangePicker />}
+				{showDateRangePicker && <DateRangePicker onUpdate={(values) => {
+						const { from, to } = values.range
+						// if (!from || !to) return
+						// if (differenceInDays(to, from) > MAX_DATE_RANGE_DAYS) {
+						// 	toast.error(
+						// 		`The selected date range is too large. Maximum date range is ${MAX_DATE_RANGE_DAYS} days.`
+						// 	)
+						// 	return
+						// }
+						setDateRange({ from, to })
+					}} />}
 				<DataTableViewOptions table={table} />
 			</div>
 		</div>

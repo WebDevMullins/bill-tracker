@@ -25,28 +25,44 @@ export const createBill = mutation({
 
 // Get all bills
 export const getBills = query({
-	handler: async (ctx) => {
-		const bills = await ctx.db
-			.query('bills')
-			.withIndex('by_dueDate')
-			.order('asc')
-			.collect()
+	args: { from: v.string(), to: v.string() },
+	handler: async (ctx, args) => {
+		if (args.from && args.to) {
+			const bills = await ctx.db
+				.query('bills')
+				.withIndex('by_dueDate')
+				.filter((q) =>
+					q.and(
+						q.gte(q.field('dueDate'), args.from),
+						q.lte(q.field('dueDate'), args.to)
+					)
+				)
+				.collect()
 
-		// Fetch payee and category names for each bill
-		const billsWithCategoryiesAndPayees = await Promise.all(
-			bills.map(async (bill) => {
-				const payee = await ctx.db.get(bill.payeeId)
-				const category = await ctx.db.get(bill.categoryId)
+			console.log(args.from, args.to)
 
-				return {
-					...bill,
-					categoryName: category ? category.name : 'Unknown Category',
-					payeeName: payee ? payee.name : 'Unknown Payee'
-				}
-			})
-		)
+			// bills = await ctx.db
+			// 	.query('bills')
+			// 	.withIndex('by_dueDate')
+			// 	.order('asc')
+			// 	.collect()
 
-		return billsWithCategoryiesAndPayees
+			// Fetch payee and category names for each bill
+			const billsWithCategoryiesAndPayees = await Promise.all(
+				bills.map(async (bill) => {
+					const payee = await ctx.db.get(bill.payeeId)
+					const category = await ctx.db.get(bill.categoryId)
+
+					return {
+						...bill,
+						categoryName: category ? category.name : 'Unknown Category',
+						payeeName: payee ? payee.name : 'Unknown Payee'
+					}
+				})
+			)
+
+			return billsWithCategoryiesAndPayees
+		}
 	}
 })
 
