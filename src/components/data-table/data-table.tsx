@@ -16,7 +16,7 @@ import {
 } from '@tanstack/react-table'
 import { useQuery } from 'convex/react'
 import { FunctionReference } from 'convex/server'
-import { formatDate, startOfMonth } from 'date-fns'
+import { formatDate } from 'date-fns'
 import { useState } from 'react'
 
 import {
@@ -27,6 +27,7 @@ import {
 	TableHeader,
 	TableRow
 } from '@/components/ui/table'
+import { useDateRangeStore } from '@/providers/date-store-provider'
 
 import { DataTablePagination } from './data-table-pagination'
 import { DataTableToolbar } from './data-table-toolbar'
@@ -50,16 +51,14 @@ export function DataTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [sorting, setSorting] = useState<SortingState>([])
 
-	const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
-		from: startOfMonth(new Date()),
-		to: new Date(new Date().setHours(23, 59, 59, 999))
-	})
+	const { dateRange } = useDateRangeStore((state) => state)
+
 	const queryData = useQuery(queryFunction, {
 		from: formatDate(dateRange.from, 'MM/dd/yyyy'),
 		to: formatDate(dateRange.to, 'MM/dd/yyyy')
 	})
 
-	console.log(queryData)
+	console.log('convex', queryData)
 	console.log('query dateRange', dateRange)
 
 	const table = useReactTable({
@@ -91,7 +90,6 @@ export function DataTable<TData, TValue>({
 				table={table}
 				filterKey={filterKey}
 				showDateRangePicker={showDateRangePicker}
-				setDateRange={setDateRange}
 			/>
 
 			{/* Table */}

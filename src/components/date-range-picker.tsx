@@ -4,7 +4,6 @@
 import { startOfMonth } from 'date-fns'
 import { CalendarIcon, CheckIcon } from 'lucide-react'
 import React, { type FC, useEffect, useRef, useState } from 'react'
-import { useDebounce } from 'react-use'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -21,6 +20,7 @@ import {
 	SelectValue
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import { useDateRangeStore } from '@/providers/date-store-provider'
 
 export interface DateRangePickerProps {
 	/** Click handler for applying the updates from DateRangePicker. */
@@ -88,11 +88,12 @@ const PRESETS: Preset[] = [
 export const DateRangePicker: FC<DateRangePickerProps> = ({
 	initialDateFrom = startOfMonth(new Date()),
 	initialDateTo = new Date(new Date().setHours(23, 59, 59, 999)),
-	onUpdate,
 	align = 'end',
 	locale = 'en-US'
 }): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false)
+
+	const { updateDateRange } = useDateRangeStore((state) => state)
 
 	const [range, setRange] = useState<DateRange>({
 		from: getDateAdjustedForTimezone(initialDateFrom),
@@ -101,18 +102,12 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 			: getDateAdjustedForTimezone(initialDateFrom)
 	})
 
-	const [debouncedUpdate] = useDebounce(() => {
-			onUpdate?.({ range })
-		// if (onUpdate) {
-		// 	onUpdate({ range })
-		// }
-	}, 500)
+	console.log('range', range)
 
-	useEffect(() => {
-		if (range) {
-			debouncedUpdate()
-		}
-	}, [range, debouncedUpdate])
+	const handleUpdate = () => {
+		updateDateRange({ ...range, to: range.to ?? range.from })
+		setIsOpen(false)
+	}
 
 	// Refs to store the values of range and rangeCompare when the date picker is opened
 	const openedRangeRef = useRef<DateRange | undefined>()
@@ -292,13 +287,13 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 	)
 
 	// Helper function to check if two date ranges are equal
-	const areRangesEqual = (a?: DateRange, b?: DateRange): boolean => {
-		if (!a || !b) return a === b // If either is undefined, return true if both are undefined
-		return (
-			a.from.getTime() === b.from.getTime() &&
-			(!a.to || !b.to || a.to.getTime() === b.to.getTime())
-		)
-	}
+	// const areRangesEqual = (a?: DateRange, b?: DateRange): boolean => {
+	// 	if (!a || !b) return a === b // If either is undefined, return true if both are undefined
+	// 	return (
+	// 		a.from.getTime() === b.from.getTime() &&
+	// 		(!a.to || !b.to || a.to.getTime() === b.to.getTime())
+	// 	)
+	// }
 
 	useEffect(() => {
 		if (isOpen) {
@@ -405,14 +400,13 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 						Cancel
 					</Button>
 					<Button
-						onClick={() => {
-							setIsOpen(false)
-							onUpdate?.({ range })
-							// debouncedUpdate()
-							// if (!areRangesEqual(range, openedRangeRef.current)) {
-							// 	onUpdate?.({ range })
-							// }
-						}}>
+						onClick={handleUpdate}
+						// onUpdate?.({ range })
+						// debouncedUpdate()
+						// if (!areRangesEqual(range, openedRangeRef.current)) {
+						// 	onUpdate?.({ range })
+						// }
+					>
 						Update
 					</Button>
 				</div>

@@ -2,24 +2,27 @@
 
 import { ReactNode } from 'react'
 
+import { Toaster } from '@/components/ui/sonner'
+
 import { ConvexClientProvider } from './convex-client'
+import { DateRangeStoreProvider } from './date-store-provider'
 import SheetProvider from './sheet-provider'
 import { ThemeProvider } from './theme'
-
-import { Toaster } from '@/components/ui/sonner'
 
 export function Providers({ children }: { children: ReactNode }) {
 	return (
 		<ConvexClientProvider>
-			<ThemeProvider
-				attribute='class'
-				defaultTheme='system'
-				enableSystem
-				disableTransitionOnChange>
-				{children}
-				<SheetProvider />
-				<Toaster richColors />
-			</ThemeProvider>
+			<DateRangeStoreProvider>
+				<ThemeProvider
+					attribute='class'
+					defaultTheme='system'
+					enableSystem
+					disableTransitionOnChange>
+					{children}
+					<SheetProvider />
+					<Toaster richColors />
+				</ThemeProvider>
+			</DateRangeStoreProvider>
 		</ConvexClientProvider>
 	)
 }

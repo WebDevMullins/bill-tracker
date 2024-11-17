@@ -13,14 +13,12 @@ interface DataTableToolbarProps<TData> {
 	table: Table<TData>
 	filterKey: string
 	showDateRangePicker?: boolean
-	setDateRange: (range: { from: Date; to: Date }) => void
 }
 
 export function DataTableToolbar<TData>({
 	table,
 	filterKey,
-	showDateRangePicker,
-	setDateRange
+	showDateRangePicker
 }: DataTableToolbarProps<TData>) {
 	const isFiltered = table.getState().columnFilters.length > 0
 
@@ -56,15 +54,7 @@ export function DataTableToolbar<TData>({
 						Delete {table.getFilteredSelectedRowModel().rows.length} items
 					</Button>
 				)}
-				{showDateRangePicker && (
-					<DateRangePicker
-						onUpdate={(values) => {
-							const { from, to } = values.range
-							if (!from || !to) return
-							setDateRange({ from, to })
-						}}
-					/>
-				)}
+				{showDateRangePicker && <DateRangePicker />}
 				<DataTableViewOptions table={table} />
 			</div>
 		</div>
