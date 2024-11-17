@@ -37,7 +37,6 @@ interface DataTableProps<TData, TValue> {
 	filterKey: string
 	queryFunction: FunctionReference<'query'>
 	showDateRangePicker?: boolean
-	updateDateRange?: (values: { range: { from: Date; to: Date } }) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -51,7 +50,7 @@ export function DataTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [sorting, setSorting] = useState<SortingState>([])
 
-	const { dateRange } = useDateRangeStore((state) => state)
+	const dateRange = useDateRangeStore((state) => state.dateRange)
 
 	const queryData = useQuery(queryFunction, {
 		from: formatDate(dateRange.from, 'MM/dd/yyyy'),
@@ -59,7 +58,7 @@ export function DataTable<TData, TValue>({
 	})
 
 	console.log('convex', queryData)
-	console.log('query dateRange', dateRange)
+	console.log('zustand dateRange', dateRange)
 
 	const table = useReactTable({
 		data: queryData || [],

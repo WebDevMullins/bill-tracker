@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 'use client'
 
-import { startOfMonth } from 'date-fns'
+// import { startOfMonth } from 'date-fns'
 import { CalendarIcon, CheckIcon } from 'lucide-react'
 import React, { type FC, useEffect, useRef, useState } from 'react'
 
@@ -86,20 +86,27 @@ const PRESETS: Preset[] = [
 
 /** The DateRangePicker component allows a user to select a range of dates */
 export const DateRangePicker: FC<DateRangePickerProps> = ({
-	initialDateFrom = startOfMonth(new Date()),
-	initialDateTo = new Date(new Date().setHours(23, 59, 59, 999)),
+	// initialDateFrom = startOfMonth(new Date()),
+	// initialDateTo = new Date(new Date().setHours(23, 59, 59, 999)),
 	align = 'end',
 	locale = 'en-US'
 }): JSX.Element => {
 	const [isOpen, setIsOpen] = useState(false)
 
-	const { updateDateRange } = useDateRangeStore((state) => state)
+	const { dateRange, updateDateRange } = useDateRangeStore((state) => state)
+
+	const initialDateFrom = dateRange.from
+	const initialDateTo = dateRange.to
 
 	const [range, setRange] = useState<DateRange>({
-		from: getDateAdjustedForTimezone(initialDateFrom),
-		to: initialDateTo
-			? getDateAdjustedForTimezone(initialDateTo)
-			: getDateAdjustedForTimezone(initialDateFrom)
+		from: getDateAdjustedForTimezone(dateRange.from),
+		// from: getDateAdjustedForTimezone(initialDateFrom),
+		to: dateRange.to
+			? getDateAdjustedForTimezone(dateRange.to)
+			: getDateAdjustedForTimezone(dateRange.to)
+		// to: initialDateTo
+		// 	? getDateAdjustedForTimezone(initialDateTo)
+		// 	: getDateAdjustedForTimezone(initialDateFrom)
 	})
 
 	console.log('range', range)
@@ -399,16 +406,7 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 						variant='ghost'>
 						Cancel
 					</Button>
-					<Button
-						onClick={handleUpdate}
-						// onUpdate?.({ range })
-						// debouncedUpdate()
-						// if (!areRangesEqual(range, openedRangeRef.current)) {
-						// 	onUpdate?.({ range })
-						// }
-					>
-						Update
-					</Button>
+					<Button onClick={handleUpdate}>Update</Button>
 				</div>
 			</PopoverContent>
 		</Popover>
