@@ -39,7 +39,7 @@ export const getBills = query({
 				)
 				.collect()
 
-			console.log(args.from, args.to)
+			console.log('from: ', args.from, 'to: ', args.to)
 
 			// bills = await ctx.db
 			// 	.query('bills')

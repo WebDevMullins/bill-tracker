@@ -1,12 +1,10 @@
 'use client'
 
-import { useQuery } from 'convex/react'
 import { useState } from 'react'
 
 import { columns } from '@/components/bills/columns'
 import CreateButton from '@/components/create-button'
 import { DataTable } from '@/components/data-table/data-table'
-import { DateRangePicker } from '@/components/date-range-picker'
 
 import { api } from '../../../../convex/_generated/api'
 
@@ -15,13 +13,8 @@ export default function BillsPage() {
 		from: new Date(new Date().setHours(0, 0, 0, 0)),
 		to: new Date(new Date().setHours(23, 59, 59, 999))
 	})
-	const bills = useQuery(api.bills.getBills, {
-		from: dateRange.from.toISOString(),
-		to: dateRange.to.toISOString()
-	})
 
-	console.log(bills)
-	console.log(dateRange)
+	console.log('query dateRange', dateRange)
 
 	return (
 		<div className='container py-12'>
@@ -35,23 +28,15 @@ export default function BillsPage() {
 							</p>
 						</div>
 						<div className='flex items-center space-x-2'>
-							<DateRangePicker
-								onUpdate={(values) => {
-									const { from, to } = values.range
-									if (!from || !to) return
-									setDateRange({ from, to })
-								}}
-							/>
 							<CreateButton sheetType='bill' />
 						</div>
 					</div>
 					<DataTable
 						columns={columns}
-						data={bills || []}
 						filterKey='payeeName'
+						queryFunction={api.bills.getBills}
 						showDateRangePicker={true}
 						updateDateRange={({ range }) => setDateRange(range)}
-						// options={['status', 'priority']}
 					/>
 				</div>
 			</div>

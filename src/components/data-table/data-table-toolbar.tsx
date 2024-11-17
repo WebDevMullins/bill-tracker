@@ -7,22 +7,20 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 import { DateRangePicker } from '../date-range-picker'
-// import { DataTableFacetedFilter } from './data-table-faceted-filter'
 import { DataTableViewOptions } from './data-table-view-options'
 
 interface DataTableToolbarProps<TData> {
 	table: Table<TData>
 	filterKey: string
 	showDateRangePicker?: boolean
-	onDateRangeChange?: (range: {from: Date; to: Date}) => void
-	// options: string[]
+	setDateRange: (range: { from: Date; to: Date }) => void
 }
 
 export function DataTableToolbar<TData>({
 	table,
 	filterKey,
-	showDateRangePicker = true
-	// options
+	showDateRangePicker,
+	setDateRange
 }: DataTableToolbarProps<TData>) {
 	const isFiltered = table.getState().columnFilters.length > 0
 
@@ -38,21 +36,6 @@ export function DataTableToolbar<TData>({
 					}
 					className='h-8 w-[150px] lg:w-[250px]'
 				/>
-				{/* {table.getColumn('status') && (
-					<DataTableFacetedFilter
-						column={table.getColumn(options[0]!)}
-						title='Status'
-						options={options}
-					/>
-				)}
-				{table.getColumn('priority') && (
-					<DataTableFacetedFilter
-						column={table.getColumn('priority')}
-						title='Priority'
-						options={priorities}
-					/>
-				)} */}
-
 				{isFiltered && (
 					<Button
 						variant='ghost'
@@ -73,17 +56,15 @@ export function DataTableToolbar<TData>({
 						Delete {table.getFilteredSelectedRowModel().rows.length} items
 					</Button>
 				)}
-				{showDateRangePicker && <DateRangePicker onUpdate={(values) => {
-						const { from, to } = values.range
-						// if (!from || !to) return
-						// if (differenceInDays(to, from) > MAX_DATE_RANGE_DAYS) {
-						// 	toast.error(
-						// 		`The selected date range is too large. Maximum date range is ${MAX_DATE_RANGE_DAYS} days.`
-						// 	)
-						// 	return
-						// }
-						setDateRange({ from, to })
-					}} />}
+				{showDateRangePicker && (
+					<DateRangePicker
+						onUpdate={(values) => {
+							const { from, to } = values.range
+							if (!from || !to) return
+							setDateRange({ from, to })
+						}}
+					/>
+				)}
 				<DataTableViewOptions table={table} />
 			</div>
 		</div>

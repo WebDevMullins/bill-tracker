@@ -1,8 +1,10 @@
 /* eslint-disable max-lines */
 'use client'
 
+import { startOfMonth } from 'date-fns'
 import { CalendarIcon, CheckIcon } from 'lucide-react'
 import React, { type FC, useEffect, useRef, useState } from 'react'
+import { useDebounce } from 'react-use'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -27,10 +29,6 @@ export interface DateRangePickerProps {
 	initialDateFrom?: Date | string
 	/** Initial value for end date */
 	initialDateTo?: Date | string
-	/** Initial value for start date for compare */
-	// initialCompareFrom?: Date | string
-	/** Initial value for end date for compare */
-	// initialCompareTo?: Date | string
 	/** Alignment of popover */
 	align?: 'start' | 'center' | 'end'
 	/** Option for locale */
@@ -88,10 +86,8 @@ const PRESETS: Preset[] = [
 
 /** The DateRangePicker component allows a user to select a range of dates */
 export const DateRangePicker: FC<DateRangePickerProps> = ({
-	initialDateFrom = new Date(new Date().setHours(0, 0, 0, 0)),
-	initialDateTo,
-	// initialCompareFrom,
-	// initialCompareTo,
+	initialDateFrom = startOfMonth(new Date()),
+	initialDateTo = new Date(new Date().setHours(23, 59, 59, 999)),
 	onUpdate,
 	align = 'end',
 	locale = 'en-US'
@@ -104,20 +100,22 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 			? getDateAdjustedForTimezone(initialDateTo)
 			: getDateAdjustedForTimezone(initialDateFrom)
 	})
-	// const [rangeCompare, setRangeCompare] = useState<DateRange | undefined>(
-	// 	initialCompareFrom
-	// 		? {
-	// 				from: new Date(new Date(initialCompareFrom).setHours(0, 0, 0, 0)),
-	// 				to: initialCompareTo
-	// 					? new Date(new Date(initialCompareTo).setHours(0, 0, 0, 0))
-	// 					: new Date(new Date(initialCompareFrom).setHours(0, 0, 0, 0))
-	// 			}
-	// 		: undefined
-	// )
+
+	const [debouncedUpdate] = useDebounce(() => {
+			onUpdate?.({ range })
+		// if (onUpdate) {
+		// 	onUpdate({ range })
+		// }
+	}, 500)
+
+	useEffect(() => {
+		if (range) {
+			debouncedUpdate()
+		}
+	}, [range, debouncedUpdate])
 
 	// Refs to store the values of range and rangeCompare when the date picker is opened
 	const openedRangeRef = useRef<DateRange | undefined>()
-	// const openedRangeCompareRef = useRef<DateRange | undefined>()
 
 	const [selectedPreset, setSelectedPreset] = useState<string | undefined>(
 		undefined
@@ -215,23 +213,6 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 	const setPreset = (preset: string): void => {
 		const range = getPresetRange(preset)
 		setRange(range)
-		// if (rangeCompare) {
-		// 	const rangeCompare = {
-		// 		from: new Date(
-		// 			range.from.getFullYear() - 1,
-		// 			range.from.getMonth(),
-		// 			range.from.getDate()
-		// 		),
-		// 		to: range.to
-		// 			? new Date(
-		// 					range.to.getFullYear() - 1,
-		// 					range.to.getMonth(),
-		// 					range.to.getDate()
-		// 				)
-		// 			: undefined
-		// 	}
-		// 	setRangeCompare(rangeCompare)
-		// }
 	}
 
 	const checkPreset = (): void => {
@@ -276,23 +257,6 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 					? getDateAdjustedForTimezone(initialDateFrom)
 					: initialDateFrom
 		})
-		// setRangeCompare(
-		// 	initialCompareFrom
-		// 		? {
-		// 				from:
-		// 					typeof initialCompareFrom === 'string'
-		// 						? getDateAdjustedForTimezone(initialCompareFrom)
-		// 						: initialCompareFrom,
-		// 				to: initialCompareTo
-		// 					? typeof initialCompareTo === 'string'
-		// 						? getDateAdjustedForTimezone(initialCompareTo)
-		// 						: initialCompareTo
-		// 					: typeof initialCompareFrom === 'string'
-		// 						? getDateAdjustedForTimezone(initialCompareFrom)
-		// 						: initialCompareFrom
-		// 			}
-		// 		: undefined
-		// )
 	}
 
 	useEffect(() => {
@@ -339,7 +303,6 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 	useEffect(() => {
 		if (isOpen) {
 			openedRangeRef.current = range
-			// openedRangeCompareRef.current = rangeCompare
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isOpen])
@@ -444,15 +407,11 @@ export const DateRangePicker: FC<DateRangePickerProps> = ({
 					<Button
 						onClick={() => {
 							setIsOpen(false)
-							if (
-								!areRangesEqual(range, openedRangeRef.current)
-								// !areRangesEqual(rangeCompare, openedRangeCompareRef.current)
-							) {
-								onUpdate?.({
-									range
-									// rangeCompare
-								})
-							}
+							onUpdate?.({ range })
+							// debouncedUpdate()
+							// if (!areRangesEqual(range, openedRangeRef.current)) {
+							// 	onUpdate?.({ range })
+							// }
 						}}>
 						Update
 					</Button>
