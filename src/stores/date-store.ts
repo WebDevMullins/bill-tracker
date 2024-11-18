@@ -2,12 +2,17 @@
 import { startOfMonth } from 'date-fns'
 import { createStore } from 'zustand/vanilla'
 
+type DateRange = {
+	from: Date
+	to: Date
+}
+
 export type DateRangeState = {
-	dateRange: { from: Date; to: Date }
+	dateRange: DateRange
 }
 
 export type DateRangeActions = {
-	updateDateRange: (range: { from: Date; to: Date }) => void
+	updateDateRange: (range: DateRange) => void
 }
 
 export type DateRangeStore = DateRangeState & DateRangeActions
@@ -25,6 +30,7 @@ export const createDateRangeStore = (
 ) => {
 	return createStore<DateRangeStore>()((set) => ({
 		...initState,
-		updateDateRange: (range) => set({ dateRange: range })
+		updateDateRange: (range) =>
+			set({ dateRange: range })
 	}))
 }

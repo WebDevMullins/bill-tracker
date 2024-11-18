@@ -1,5 +1,7 @@
 'use client'
 
+import { convexQuery } from '@convex-dev/react-query'
+import { useQuery } from '@tanstack/react-query'
 import {
 	type ColumnDef,
 	type ColumnFiltersState,
@@ -14,7 +16,6 @@ import {
 	useReactTable,
 	type VisibilityState
 } from '@tanstack/react-table'
-import { useQuery } from 'convex/react'
 import { FunctionReference } from 'convex/server'
 import { formatDate } from 'date-fns'
 import { useState } from 'react'
@@ -50,11 +51,14 @@ export function DataTable<TData, TValue>({
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 	const [sorting, setSorting] = useState<SortingState>([])
 
-	const dateRange = useDateRangeStore((state) => state.dateRange)
+	const { dateRange } = useDateRangeStore((state) => state)
 
-	const queryData = useQuery(queryFunction, {
-		from: formatDate(dateRange.from, 'MM/dd/yyyy'),
-		to: formatDate(dateRange.to, 'MM/dd/yyyy')
+	const { data: queryData } = useQuery({
+		...convexQuery(queryFunction, {
+			from: formatDate(dateRange.from, 'MM/dd/yyyy'),
+			to: formatDate(dateRange.to, 'MM/dd/yyyy')
+		}),
+		queryKey: ['convexQuery', queryFunction, dateRange]
 	})
 
 	console.log('convex', queryData)

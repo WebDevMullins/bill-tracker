@@ -4,14 +4,14 @@ import { ReactNode } from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
 
-import { ConvexClientProvider } from './convex-client'
+import { ConvexQueryClientProvider } from './convex-query-client-provider'
 import { DateRangeStoreProvider } from './date-store-provider'
 import SheetProvider from './sheet-provider'
 import { ThemeProvider } from './theme'
 
 export function Providers({ children }: { children: ReactNode }) {
 	return (
-		<ConvexClientProvider>
+		<ConvexQueryClientProvider>
 			<DateRangeStoreProvider>
 				<ThemeProvider
 					attribute='class'
@@ -23,6 +23,6 @@ export function Providers({ children }: { children: ReactNode }) {
 					<Toaster richColors />
 				</ThemeProvider>
 			</DateRangeStoreProvider>
-		</ConvexClientProvider>
+		</ConvexQueryClientProvider>
 	)
 }
