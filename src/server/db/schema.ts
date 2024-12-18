@@ -1,6 +1,4 @@
-// Example model schema from the Drizzle docs
-// https://orm.drizzle.team/docs/sql-schema-declaration
-
+import { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 import { index, integer, pgTableCreator, varchar } from 'drizzle-orm/pg-core'
 
 /**
@@ -44,3 +42,9 @@ export const payees = createTable(
 	},
 	(example) => [index('name_idx').on(example.id)]
 )
+
+export type Bill = InferSelectModel<typeof bills>
+export type Category = InferSelectModel<typeof categories>
+export type Payee = InferSelectModel<typeof payees>
+
+export type InsertBill = InferInsertModel<typeof bills>
