@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery } from 'convex/react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { formatDate } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -29,9 +29,9 @@ import {
 } from '@/components/ui/select'
 import { useSheet } from '@/hooks/use-sheet'
 import { convertToMiliunits } from '@/lib/utils'
-
-import { api } from '../../../convex/_generated/api'
-import { Id } from '../../../convex/_generated/dataModel'
+import { createBill } from '@/server/db/bills'
+import { getCategories } from '@/server/db/categories'
+import { getPayees } from '@/server/db/payees'
 
 const formSchema = z.object({
 	amount: z.string().min(1),
@@ -45,44 +45,77 @@ type FormValues = z.infer<typeof formSchema>
 
 type Props = {
 	defaultValues?: FormValues
+	onSubmit: (values: FormValues) => void
 }
 
-export function NewBillForm({ defaultValues }: Props) {
-	const { onClose } = useSheet()
-	const createBill = useMutation(api.bills.createBill)
-	const payees = useQuery(api.payees.getPayees) ?? []
+// function NewBill() {
+// 	const { mutate } = useMutation({
+// 		mutationFn: (values: FormValues) => {
+// 			const amount = parseFloat(values.amount)
+// 			const amountInMiliunits = convertToMiliunits(amount)
+// 			const formattedDate = formatDate(values.dueDate, 'MM/dd/yyyy')
+// 			return createBill(
+// 				amountInMiliunits,
+// 				parseInt(values.categoryId),
+// 				categories?.find(
+// 					(category) => category.id.toString() === values.categoryId
+// 				)?.name || '',
+// 				formattedDate,
+// 				values.isPaid ? 1 : 0,
+// 				payees?.find((payee) => payee.id.toString() === values.payeeId)?.name ||
+// 					'',
+// 				parseInt(values.payeeId)
+// 			)
+// 		}
+// 	})
+// 	const { data: payees } = useQuery({
+// 		queryKey: ['payees'],
+// 		queryFn: getPayees
+// 	})
 
-	const categories = useQuery(api.categories.getCategories) ?? []
+// 	const { data: categories } = useQuery({
+// 		queryKey: ['categories'],
+// 		queryFn: getCategories
+// 	})
+// }
+
+export function NewBillForm({ defaultValues, onSubmit }: Props) {
+	const { onClose } = useSheet()
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: defaultValues
 	})
 
-	async function onSubmit(value: FormValues) {
-		const amount = parseFloat(value.amount)
-		const amountInMiliunits = convertToMiliunits(amount)
-		const formattedDate = formatDate(value.dueDate, 'MM/dd/yyyy')
+	// async function onSubmit(value: FormValues) {
+	// 	const amount = parseFloat(value.amount)
+	// 	const amountInMiliunits = convertToMiliunits(amount)
+	// 	const formattedDate = formatDate(value.dueDate, 'MM/dd/yyyy')
 
-		try {
-			await createBill({
-				amount: amountInMiliunits,
-				dueDate: formattedDate,
-				isPaid: value.isPaid ?? false,
-				categoryId: value.categoryId as Id<'categories'>,
-				payeeId: value.payeeId as Id<'payees'>
-			})
-			toast.success(`Bill added successfully.`)
-		} catch (error) {
-			console.error(error)
-			const errorMessage =
-				error instanceof Error ? error.message : 'Unknown error'
-			toast.error(`Failed to add bill. ${errorMessage}`)
-		}
+	// 	try {
+	// 		await createBill(
+	// 			amountInMiliunits,
+	// 			parseInt(value.categoryId),
+	// 			categories?.find(
+	// 				(category) => category.id.toString() === value.categoryId
+	// 			)?.name || '',
+	// 			formattedDate,
+	// 			value.isPaid ? 1 : 0,
+	// 			payees?.find((payee) => payee.id.toString() === value.payeeId)?.name ||
+	// 				'',
+	// 			parseInt(value.payeeId)
+	// 		)
+	// 		toast.success(`Bill added successfully.`)
+	// 	} catch (error) {
+	// 		console.error(error)
+	// 		const errorMessage =
+	// 			error instanceof Error ? error.message : 'Unknown error'
+	// 		toast.error(`Failed to add bill. ${errorMessage}`)
+	// 	}
 
-		onClose()
-		form.reset(defaultValues)
-	}
+	// 	onClose()
+	// 	form.reset(defaultValues)
+	// }
 
 	return (
 		<Form {...form}>
@@ -119,10 +152,10 @@ export function NewBillForm({ defaultValues }: Props) {
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									{payees.map((payee) => (
+									{payees?.map((payee) => (
 										<SelectItem
-											key={payee._id}
-											value={payee._id}
+											key={payee.id}
+											value={payee.id.toString()}
 											className='capitalize'>
 											{payee.name}
 										</SelectItem>
@@ -148,10 +181,10 @@ export function NewBillForm({ defaultValues }: Props) {
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
-									{categories.map((category) => (
+									{categories?.map((category) => (
 										<SelectItem
-											key={category._id}
-											value={category._id}
+											key={category.id}
+											value={category.id.toString()}
 											className='capitalize'>
 											{category.name}
 										</SelectItem>

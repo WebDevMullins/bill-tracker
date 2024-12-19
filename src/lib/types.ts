@@ -1,8 +1,8 @@
 export type Bill = {
-	_id: string
+	id: string
 	amount: number
-	categoryName: string
 	categoryId: string
+	categoryName: string
 	dueDate: string
 	isPaid: boolean
 	payeeName: string
@@ -10,12 +10,12 @@ export type Bill = {
 }
 
 export type Category = {
-	_id: string
+	id: string
 	name: string
 }
 
 export type Payee = {
-	_id: string
+	id: string
 	name: string
 	website: string
 }
